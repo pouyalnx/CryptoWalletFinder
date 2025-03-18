@@ -1,0 +1,19 @@
+import requests
+import json
+
+def get_balance(address, token_symbol):
+  url = "https://apilist.tronscan.org/api/account"
+  payload = {
+      "address": address,
+  }
+  res = requests.get(url, params=payload)
+  print(json.loads(res.text).keys())
+  print(json.loads(res.text)["trc20token_balances"])
+  trc20token_balances = json.loads(res.text)["trc20token_balances"]
+  token_balance = next((item for item in trc20token_balances if item["symbol"] == token_symbol), None)
+  if token_balance == None:
+    return 0
+  else:
+    return int(token_balance["balance"])
+  
+print(get_balance('TCLR62QdWGGG56nDZ8Gtsscab4cSUJZo3A', 'Tron'))
